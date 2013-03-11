@@ -1,0 +1,30 @@
+NAME="autoconf2.1"
+VERSION=2.13
+RELEASE=11
+CATEGORY="Devel"
+SUMMARY="Current version of the automatic configure script builder"
+DESCRIPTION="Autoconf is an extensible package of m4 macros that produce shell
+scripts to automatically configure software source code packages. These scripts
+can adapt the packages to many kinds of UNIX-like systems without manual user
+intervention.  Autoconf creates a configuration script for a package from a
+template file that lists the operating system features that the package can use,
+in the form of m4 macro calls."
+REQUIRES="m4"
+HOMEPAGE="http://www.gnu.org/software/autoconf/"
+SRC_URI="mirror://gnu/autoconf/autoconf-${PV}.tar.gz"
+SRC_DIR="autoconf-${PV}"
+
+src_compile() {
+	cd ${B}
+	# This package is not autotoolized, so skip cygautoreconf
+	cygconf	--program-suffix=-${VERSION}
+	cygmake -j1
+}
+
+src_install() {
+	cd ${B}
+	USE_DESTDIR=no \
+	cyginstall
+	# conflicts with autoconf2.5, binutils, gdb
+	rm -f ${D}/usr/share/info/*
+}
